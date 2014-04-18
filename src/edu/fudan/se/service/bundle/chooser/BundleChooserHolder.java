@@ -6,15 +6,13 @@ import edu.fudan.se.service.bundle.message.ServiceDescription;
 import edu.fudan.se.service.bundle.similarity.CosineSimilarityCalculator;
 import edu.fudan.se.service.bundle.similarity.SimilarityCalculator;
 import edu.fudan.se.service.bundle.similarity.SimpleWordSimilarityCalculator;
+import edu.fudan.se.service.servlet.util.Parameter;
 
 public class BundleChooserHolder {
 	private static BundleChooser defaultBundleChooser;
-	private static final String BUNDLE_DIR = "D:" + File.separator
-			+ "Development" + File.separator + "Workspace" + File.separator
-			+ "bundleDir";
-
+	
 	static {
-		File bundleDir = new File(BUNDLE_DIR);
+		File bundleDir = new File(Parameter.BUNDLE_DIR);
 		SimilarityCalculator<ServiceDescription> serviceDescriptionSimilarityCalculator = CosineSimilarityCalculator
 				.getInstance();
 		SimilarityCalculator<String> wordSimilarityCalculator = SimpleWordSimilarityCalculator

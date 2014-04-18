@@ -1,11 +1,6 @@
 package edu.fudan.se.service.bundle.chooser;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +15,8 @@ import edu.fudan.se.service.bundle.message.Response;
 import edu.fudan.se.service.bundle.message.ServiceDescription;
 import edu.fudan.se.service.bundle.similarity.MostSimilarCalculator;
 import edu.fudan.se.service.bundle.similarity.SimilarityCalculator;
+import edu.fudan.se.service.servlet.util.IOUtil;
+import edu.fudan.se.service.servlet.util.Parameter;
 
 public class BasicBundleChooser implements BundleChooser {
 	private static final Name BUNDLE_DESCRIPTION = new Name(
@@ -27,18 +24,9 @@ public class BasicBundleChooser implements BundleChooser {
 	private static final Name SERVICE_INPUT = new Name("Service-Input");
 	private static final Name SERVCIE_OUTPUT = new Name("Service-Output");
 
-	private static final int BUFFER_SIZE = 4096;
-
 	private File bundleDir;
 	private SimilarityCalculator<ServiceDescription> serviceDescriptionSimilarityCalculator;
 	private SimilarityCalculator<String> wordSimilarityCalculator;
-
-	private static final FilenameFilter JAR_FILTER = new FilenameFilter() {
-		@Override
-		public boolean accept(File dir, String name) {
-			return name.toLowerCase().endsWith(".jar");
-		}
-	};
 
 	public BasicBundleChooser(
 			File bundleDir,
@@ -52,7 +40,7 @@ public class BasicBundleChooser implements BundleChooser {
 	@Override
 	public Response getResponseByDescription(ServiceDescription service) {
 		List<BundleDescription> bundles = new ArrayList<BundleDescription>();
-		for (String bundleName : bundleDir.list(JAR_FILTER)) {
+		for (String bundleName : bundleDir.list(Parameter.JAR_FILTER)) {
 			BundleDescription bundle = getBundleDescription(bundleName);
 			if (bundle != null) {
 				bundles.add(bundle);
@@ -71,32 +59,10 @@ public class BasicBundleChooser implements BundleChooser {
 		int[] inputMatch = getParamMatch(service.getInput(), bundle.getInput());
 		int[] outputMatch = getParamMatch(service.getOutput(),
 				bundle.getOutput());
-		byte[] bundleFile = getBundleFile(bundle.getPath());
+		byte[] bundleFile = IOUtil.getBundleFile(bundle.getPath());
 
 		return new Response(inputMatch, outputMatch, bundleFile,
 				bundle.getName());
-	}
-
-	private byte[] getBundleFile(String path) {
-		byte[] buffer = null;
-		BufferedInputStream in = null;
-		ByteArrayOutputStream bos = null;
-		try {
-			in = new BufferedInputStream(new FileInputStream(path));
-			bos = new ByteArrayOutputStream(BUFFER_SIZE);
-			byte[] b = new byte[BUFFER_SIZE];
-			int n;
-			while ((n = in.read(b)) != -1) {
-				bos.write(b, 0, n);
-			}
-			buffer = bos.toByteArray();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			close(in);
-			close(bos);
-		}
-		return buffer;
 	}
 
 	private int[] getParamMatch(String[] source, String[] target) {
@@ -134,7 +100,7 @@ public class BasicBundleChooser implements BundleChooser {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			close(bundle);
+			IOUtil.close(bundle);
 		}
 
 		return result;
@@ -150,16 +116,6 @@ public class BasicBundleChooser implements BundleChooser {
 					"%s format error: %s", position, tocheck));
 		}
 		return tocheck.split(",");
-	}
-
-	private void close(Closeable closeable) {
-		try {
-			if (closeable != null) {
-				closeable.close();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 }

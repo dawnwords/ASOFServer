@@ -4,64 +4,51 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test Bundle Servlet</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<title>Test</title>
 </head>
 <body>
-	<script type="text/javascript">
-		window.onload = function() {
-			document.getElementById("submit_btn").onclick = function() {
-				var description = getInputValue("description");
-				var input = getInputValue("input").replace(" ", "");
-				var output = getInputValue("output").replace(" ", "");
-				var service_description = document
-						.getElementById("service_description");
-				var msg = document.getElementById("msg");
 
-				var reg = /^((\w+)(,(\w+))*)?$/;
-				if (!reg.test(input)) {
-					msg.innerHTML = "input format error: " + input;
-				} else if (!reg.test(output)) {
-					msg.innerHTML = "output format error: " + output;
-				} else {
-					var value = new Object();
-					value.description = description;
-					value.input = input == "" ? [] : input.split(",");
-					value.output = output == "" ? [] : output.split(",");
+	<table border="1">
+		<tr>
+			<td>
+				<table>
+					<tbody>
+						<tr>
+							<td>Description:</td>
+							<td><input id="description" type="text" /></td>
+						</tr>
+						<tr>
+							<td>Input:</td>
+							<td><input id="input" type="text" /></td>
+						</tr>
+						<tr>
+							<td>Output:</td>
+							<td><input id="output" type="text" /></td>
+						</tr>
+					</tbody>
+				</table>
+				<p>
+					<input id="get_bundle_btn" value="Submit" type="button" /> <span
+						id="bundle_msg" />
+				</p>
+			</td>
+			<td id="bundle_result"></td>
+		</tr>
+		<tr>
+			<td>List Templates:<input id="list_template_btn" value="Submit"
+				type="button" />
+			</td>
+			<td id="list_template_result"></td>
+		</tr>
+		<tr>
+			<td>Template Name:<input id="template_name" name="template"
+				type="text" /><input id="get_template_btn" value="Submit"
+				type="submit" /></td>
+			<td id="template_result"></td>
+		</tr>
+	</table>
 
-					value = JSON.stringify(value);
-					service_description.value = value;
-					msg.innerHTML = value;
-					document.getElementById("get_bundle").submit();
-				}
-			};
-		}
-
-		function getInputValue(id) {
-			return document.getElementById(id).value;
-		}
-	</script>
-	<form id="get_bundle" action="BundleServlet" method="post">
-		<table>
-			<tbody>
-				<tr>
-					<td>Description:</td>
-					<td><input id="description" type="text" /></td>
-				</tr>
-				<tr>
-					<td>Input:</td>
-					<td><input id="input" type="text" /></td>
-				</tr>
-				<tr>
-					<td>Output:</td>
-					<td><input id="output" type="text" /></td>
-				</tr>
-			</tbody>
-		</table>
-		<input id="service_description" name="service_description"
-			type="hidden" />
-		<p>
-			<input id="submit_btn" value="Submit" type="button" /><span id="msg" />
-		</p>
-	</form>
 </body>
 </html>
