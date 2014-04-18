@@ -1,4 +1,4 @@
-package edu.fudan.se.service.bundle.servlet;
+package edu.fudan.se.service.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONObject;
 import edu.fudan.se.service.bundle.chooser.BundleChooser;
 import edu.fudan.se.service.bundle.chooser.BundleChooserHolder;
 import edu.fudan.se.service.bundle.message.Response;
 import edu.fudan.se.service.bundle.message.ServiceDescription;
+import edu.fudan.se.service.servlet.util.Util;
 
 /**
  * Servlet implementation class BundleServlet
@@ -55,18 +55,16 @@ public class BundleServlet extends HttpServlet {
 
 	private ServiceDescription getServiceDescriptionFromRequest(
 			HttpServletRequest request) {
-		JSONObject requestJson = JSONObject.fromObject(request
-				.getParameter("service_description"));
-		return (ServiceDescription) JSONObject.toBean(requestJson,
+		return Util.getGson().fromJson(
+				request.getParameter("service_description"),
 				ServiceDescription.class);
 	}
 
 	private void generateResponse(HttpServletResponse response,
 			Response bundleDescription) throws IOException {
-		JSONObject json = JSONObject.fromObject(bundleDescription);
 		response.setContentType("application/x-json");
 		PrintWriter writer = new PrintWriter(response.getOutputStream());
-		writer.println(json.toString());
+		writer.println(Util.getGson().toJson(bundleDescription));
 		writer.flush();
 	}
 

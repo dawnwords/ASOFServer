@@ -1,5 +1,7 @@
 package edu.fudan.se.service.bundle.message;
 
+import java.util.Arrays;
+
 public class ServiceDescription {
 	private String description;
 	private String[] input;
@@ -37,5 +39,11 @@ public class ServiceDescription {
 	public void setOutput(String[] output) {
 		this.output = output;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "ServiceDescription [description=" + description + ", input="
+				+ Arrays.toString(input) + ", output="
+				+ Arrays.toString(output) + "]";
+	}
 }

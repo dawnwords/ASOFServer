@@ -14,6 +14,8 @@ public class MostSimilarCalculator<T> {
 		for (T candidate : candidates) {
 			double currentValue = similarityCalculator.calculateSimilarity(
 					candidate, target);
+			System.out.printf("[%d]%s:similarity = %f\n", i, candidate,
+					currentValue);
 			if (currentValue > bestValue) {
 				bestValue = currentValue;
 				index = i;
