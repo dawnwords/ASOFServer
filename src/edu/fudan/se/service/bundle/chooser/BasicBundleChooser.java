@@ -21,6 +21,7 @@ import edu.fudan.se.service.servlet.util.Parameter;
 public class BasicBundleChooser implements BundleChooser {
 	private static final Name BUNDLE_DESCRIPTION = new Name(
 			"Bundle-Description");
+	private static final Name SERVICE_ACTIVITY = new Name("Service-Activity");
 	private static final Name SERVICE_INPUT = new Name("Service-Input");
 	private static final Name SERVCIE_OUTPUT = new Name("Service-Output");
 
@@ -60,9 +61,9 @@ public class BasicBundleChooser implements BundleChooser {
 		int[] outputMatch = getParamMatch(service.getOutput(),
 				bundle.getOutput());
 		byte[] bundleFile = IOUtil.getBundleFile(bundle.getPath());
-
+		
 		return new Response(inputMatch, outputMatch, bundleFile,
-				bundle.getName());
+				bundle.getName(), bundle.getActivityClass());
 	}
 
 	private int[] getParamMatch(String[] source, String[] target) {
@@ -89,13 +90,14 @@ public class BasicBundleChooser implements BundleChooser {
 			String serviceDescription = attrs.getValue(BUNDLE_DESCRIPTION);
 			String serviceInput = attrs.getValue(SERVICE_INPUT);
 			String serviceOutput = attrs.getValue(SERVCIE_OUTPUT);
+			String serviceActivity = attrs.getValue(SERVICE_ACTIVITY);
 
 			String[] input = checkFormatandSplit("Service-Input", serviceInput);
 			String[] output = checkFormatandSplit("Service-Output",
 					serviceOutput);
 
-			result = new BundleDescription(bundlePath, serviceDescription,
-					input, output);
+			result = new BundleDescription(bundlePath, serviceActivity,
+					serviceDescription, input, output);
 
 		} catch (IOException e) {
 			e.printStackTrace();
