@@ -1,5 +1,7 @@
 package edu.fudan.se.service.bundle.message;
 
+import java.util.Arrays;
+
 public class Response {
 	private int[] inputMatch;
 	private int[] outputMatch;
@@ -58,5 +60,11 @@ public class Response {
 	public void setActivityClass(String activityClass) {
 		this.activityClass = activityClass;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Response [inputMatch=" + Arrays.toString(inputMatch)
+				+ ", outputMatch=" + Arrays.toString(outputMatch) + ", name="
+				+ name + ", activityClass=" + activityClass + "]";
+	}
 }

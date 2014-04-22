@@ -19,10 +19,11 @@ public class BundleServlet extends JSONServlet {
 	@Override
 	protected Object getRsponseObject(HttpServletRequest request) {
 		ServiceDescription serviceDescription = getServiceDescriptionFromRequest(request);
+		System.out.println(serviceDescription);
 		Response bundleDescription = BundleChooserHolder
 				.getDefaultBundleChooser().getResponseByDescription(
 						serviceDescription);
-		System.out.println("Download Bundle " + bundleDescription.getName());
+		System.out.println(bundleDescription);
 		return bundleDescription;
 	}
 

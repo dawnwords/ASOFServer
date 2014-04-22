@@ -112,6 +112,7 @@ public class BasicBundleChooser implements BundleChooser {
 		if (tocheck == null || tocheck.length() == 0) {
 			return new String[0];
 		}
+		tocheck = tocheck.replaceAll(" " , "");
 		final String paramRegex = "((\\w+)(,(\\w+))*)?";
 		if (tocheck != null && !tocheck.matches(paramRegex)) {
 			throw new IllegalArgumentException(String.format(
